@@ -3,10 +3,23 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { toast } from 'sonner';
 import Icon from '@/components/ui/icon';
+
+interface CartItem {
+  id: number;
+  name: string;
+  price: string;
+  priceNum: number;
+  image: string;
+  quantity: number;
+}
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('catalog');
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const scrollToSection = (id: string) => {
     setActiveSection(id);
@@ -14,10 +27,52 @@ const Index = () => {
   };
 
   const projects = [
-    { id: 1, name: 'Копия БР NEW', price: '300 ₽', category: 'CRMP', features: ['Полная копия сервера', 'Все системы работают', 'Готов к запуску'], image: '💎' },
-    { id: 2, name: 'Копия Бриллиант РП', price: '250 ₽', category: 'CRMP', features: ['Полная копия сервера', 'Все системы работают', 'Готов к запуску'], image: '💍' },
-    { id: 3, name: 'Копия Суровой России', price: '200 ₽', category: 'CRMP', features: ['Полная копия сервера', 'Все системы работают', 'Готов к запуску'], image: '🏔️' },
+    { id: 1, name: 'Копия БР NEW', price: '300 ₽', priceNum: 300, category: 'CRMP', features: ['Полная копия сервера', 'Все системы работают', 'Готов к запуску'], image: '💎' },
+    { id: 2, name: 'Копия Бриллиант РП', price: '250 ₽', priceNum: 250, category: 'CRMP', features: ['Полная копия сервера', 'Все системы работают', 'Готов к запуску'], image: '💍' },
+    { id: 3, name: 'Копия Суровой России', price: '200 ₽', priceNum: 200, category: 'CRMP', features: ['Полная копия сервера', 'Все системы работают', 'Готов к запуску'], image: '🏔️' },
   ];
+
+  const addToCart = (project: typeof projects[0]) => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(item => item.id === project.id);
+      if (existingItem) {
+        toast.success('Количество увеличено!');
+        return prevCart.map(item =>
+          item.id === project.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      toast.success(`${project.name} добавлен в корзину!`);
+      return [...prevCart, { ...project, quantity: 1 }];
+    });
+  };
+
+  const removeFromCart = (id: number) => {
+    setCart(prevCart => prevCart.filter(item => item.id !== id));
+    toast.success('Товар удален из корзины');
+  };
+
+  const updateQuantity = (id: number, delta: number) => {
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.id === id
+          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
+          : item
+      )
+    );
+  };
+
+  const buyNow = (project: typeof projects[0]) => {
+    addToCart(project);
+    setIsCartOpen(true);
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce((sum, item) => sum + item.priceNum * item.quantity, 0);
+  };
+
+  const cartItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const portfolioItems = [
     { name: 'Los Santos RP', players: '500+ онлайн', description: 'Крупнейший РП сервер России', emoji: '🌆' },
@@ -67,10 +122,84 @@ const Index = () => {
             <button onClick={() => scrollToSection('faq')} className="text-sm font-medium hover:text-primary transition-colors">FAQ</button>
           </div>
 
-          <Button variant="outline" className="border-primary/50 hover:bg-primary/10">
-            <Icon name="ShoppingCart" size={16} className="mr-2" />
-            Корзина
-          </Button>
+          <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="border-primary/50 hover:bg-primary/10 relative">
+                <Icon name="ShoppingCart" size={16} className="mr-2" />
+                Корзина
+                {cartItemsCount > 0 && (
+                  <Badge className="ml-2 bg-primary text-primary-foreground">{cartItemsCount}</Badge>
+                )}
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="w-full sm:max-w-lg">
+              <SheetHeader>
+                <SheetTitle>Корзина покупок</SheetTitle>
+              </SheetHeader>
+              <div className="mt-8 flex flex-col gap-4">
+                {cart.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Icon name="ShoppingCart" size={48} className="mx-auto mb-4 text-muted-foreground" />
+                    <p className="text-muted-foreground">Корзина пуста</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex-1 overflow-auto space-y-4">
+                      {cart.map(item => (
+                        <Card key={item.id}>
+                          <CardContent className="p-4">
+                            <div className="flex items-start gap-4">
+                              <div className="text-4xl">{item.image}</div>
+                              <div className="flex-1">
+                                <h3 className="font-semibold">{item.name}</h3>
+                                <p className="text-sm text-muted-foreground">{item.price}</p>
+                                <div className="flex items-center gap-2 mt-2">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => updateQuantity(item.id, -1)}
+                                    disabled={item.quantity <= 1}
+                                  >
+                                    <Icon name="Minus" size={14} />
+                                  </Button>
+                                  <span className="text-sm font-medium w-8 text-center">{item.quantity}</span>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => updateQuantity(item.id, 1)}
+                                  >
+                                    <Icon name="Plus" size={14} />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="ml-auto text-destructive"
+                                    onClick={() => removeFromCart(item.id)}
+                                  >
+                                    <Icon name="Trash2" size={14} />
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                    <div className="border-t pt-4 space-y-4">
+                      <div className="flex items-center justify-between text-lg font-semibold">
+                        <span>Итого:</span>
+                        <span className="text-primary">{getTotalPrice()} ₽</span>
+                      </div>
+                      <Button className="w-full bg-primary hover:bg-primary/90" size="lg">
+                        <Icon name="CreditCard" size={20} className="mr-2" />
+                        Оформить заказ
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </nav>
       </header>
 
@@ -140,10 +269,21 @@ const Index = () => {
                       ))}
                     </ul>
                   </CardContent>
-                  <CardFooter>
-                    <Button className="w-full bg-primary hover:bg-primary/90">
+                  <CardFooter className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => addToCart(project)}
+                    >
                       <Icon name="ShoppingCart" size={16} className="mr-2" />
-                      Купить проект
+                      В корзину
+                    </Button>
+                    <Button
+                      className="flex-1 bg-primary hover:bg-primary/90"
+                      onClick={() => buyNow(project)}
+                    >
+                      <Icon name="Zap" size={16} className="mr-2" />
+                      Купить
                     </Button>
                   </CardFooter>
                 </Card>
