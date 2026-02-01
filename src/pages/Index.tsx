@@ -190,7 +190,15 @@ const Index = () => {
                         <span>Итого:</span>
                         <span className="text-primary">{getTotalPrice()} ₽</span>
                       </div>
-                      <Button className="w-full bg-primary hover:bg-primary/90" size="lg">
+                      <Button 
+                        className="w-full bg-primary hover:bg-primary/90" 
+                        size="lg"
+                        onClick={() => {
+                          toast.success('Спасибо за заказ! Мы свяжемся с вами в ближайшее время');
+                          setCart([]);
+                          setIsCartOpen(false);
+                        }}
+                      >
                         <Icon name="CreditCard" size={20} className="mr-2" />
                         Оформить заказ
                       </Button>
