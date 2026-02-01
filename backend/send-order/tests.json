@@ -1,0 +1,39 @@
+{
+  "tests": [
+    {
+      "name": "Test order submission with valid cart",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "items": [
+          {
+            "id": 1,
+            "name": "Копия БР NEW",
+            "price": "300 ₽",
+            "quantity": 1
+          }
+        ],
+        "totalPrice": 300
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Test empty cart rejection",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "items": [],
+        "totalPrice": 0
+      },
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "Cart is empty"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

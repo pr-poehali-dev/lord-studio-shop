@@ -129,10 +129,31 @@ const Header = ({
                     <Button 
                       className="w-full bg-primary hover:bg-primary/90" 
                       size="lg"
-                      onClick={() => {
-                        toast.success('Спасибо за заказ! Мы свяжемся с вами в ближайшее время');
-                        setCart([]);
-                        setIsCartOpen(false);
+                      onClick={async () => {
+                        try {
+                          const response = await fetch('https://functions.poehali.dev/04b92c47-9d64-4a0d-be22-6302529401f3', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                              items: cart,
+                              totalPrice: getTotalPrice()
+                            })
+                          });
+                          
+                          const data = await response.json();
+                          
+                          if (response.ok && data.success) {
+                            toast.success('Спасибо за заказ! Мы свяжемся с вами в ближайшее время');
+                            setCart([]);
+                            setIsCartOpen(false);
+                          } else {
+                            toast.error(data.message || 'Ошибка отправки заказа. Попробуйте позже');
+                          }
+                        } catch (error) {
+                          toast.error('Ошибка соединения. Проверьте интернет');
+                        }
                       }}
                     >
                       <Icon name="CreditCard" size={20} className="mr-2" />
