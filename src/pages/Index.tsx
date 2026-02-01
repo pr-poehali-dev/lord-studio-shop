@@ -14,12 +14,12 @@ const Index = () => {
   };
 
   const projects = [
-    { id: 1, name: 'РП Сервер Premium', price: '25 000 ₽', category: 'SAMP', features: ['Уникальные скрипты', '100+ профессий', 'Кастомизация'], image: '🏙️' },
-    { id: 2, name: 'Дрифт Сервер Pro', price: '18 000 ₽', category: 'CRMP', features: ['Физика дрифта', '50+ машин', 'Рейтинг игроков'], image: '🏎️' },
-    { id: 3, name: 'DM Арена Ultimate', price: '15 000 ₽', category: 'SAMP', features: ['PvP система', 'Турниры', 'Анти-читы'], image: '⚔️' },
-    { id: 4, name: 'РП Мафия Exclusive', price: '30 000 ₽', category: 'CRMP', features: ['Система банд', 'Экономика', 'Квесты'], image: '🎭' },
-    { id: 5, name: 'Гонки и Стант', price: '12 000 ₽', category: 'SAMP', features: ['Трассы', 'Рекорды', 'Награды'], image: '🏁' },
-    { id: 6, name: 'Бизнес РП Elite', price: '35 000 ₽', category: 'CRMP', features: ['Бизнес-система', 'Недвижимость', 'Банковская система'], image: '💼' },
+    { id: 1, name: 'РП Сервер Premium', price: '4 500 ₽', category: 'SAMP', features: ['Уникальные скрипты', '100+ профессий', 'Кастомизация'], image: '🏙️' },
+    { id: 2, name: 'Дрифт Сервер Pro', price: '3 200 ₽', category: 'CRMP', features: ['Физика дрифта', '50+ машин', 'Рейтинг игроков'], image: '🏎️' },
+    { id: 3, name: 'DM Арена Ultimate', price: '2 800 ₽', category: 'SAMP', features: ['PvP система', 'Турниры', 'Анти-читы'], image: '⚔️' },
+    { id: 4, name: 'РП Мафия Exclusive', price: '5 000 ₽', category: 'CRMP', features: ['Система банд', 'Экономика', 'Квесты'], image: '🎭' },
+    { id: 5, name: 'Гонки и Стант', price: '2 200 ₽', category: 'SAMP', features: ['Трассы', 'Рекорды', 'Награды'], image: '🏁' },
+    { id: 6, name: 'Бизнес РП Elite', price: '5 500 ₽', category: 'CRMP', features: ['Бизнес-система', 'Недвижимость', 'Банковская система'], image: '💼' },
   ];
 
   const portfolioItems = [
@@ -70,7 +70,7 @@ const Index = () => {
             <button onClick={() => scrollToSection('faq')} className="text-sm font-medium hover:text-primary transition-colors">FAQ</button>
           </div>
 
-          <Button className="bg-primary hover:bg-primary/90 glow-purple">
+          <Button variant="outline" className="border-primary/50 hover:bg-primary/10">
             <Icon name="ShoppingCart" size={16} className="mr-2" />
             Корзина
           </Button>
@@ -93,11 +93,11 @@ const Index = () => {
                 🎮 Уникальные проекты с кастомизацией под ваши требования
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 glow-purple animate-pulse-glow" onClick={() => scrollToSection('catalog')}>
+                <Button size="lg" variant="default" className="bg-primary hover:bg-primary/90" onClick={() => scrollToSection('catalog')}>
                   <Icon name="Sparkles" size={20} className="mr-2" />
                   Смотреть каталог
                 </Button>
-                <Button size="lg" variant="outline" className="border-secondary text-secondary hover:bg-secondary/10" onClick={() => scrollToSection('about')}>
+                <Button size="lg" variant="outline" className="border-foreground/20 hover:bg-foreground/5" onClick={() => scrollToSection('about')}>
                   <Icon name="Info" size={20} className="mr-2" />
                   О студии
                 </Button>
@@ -144,7 +144,7 @@ const Index = () => {
                     </ul>
                   </CardContent>
                   <CardFooter>
-                    <Button className="w-full bg-primary hover:bg-primary/90 group-hover:glow-purple">
+                    <Button className="w-full bg-primary hover:bg-primary/90">
                       <Icon name="ShoppingCart" size={16} className="mr-2" />
                       Купить проект
                     </Button>
@@ -324,7 +324,7 @@ const Index = () => {
 
             <div className="mt-12 text-center">
               <p className="text-muted-foreground mb-4">Не нашли ответ на свой вопрос?</p>
-              <Button size="lg" className="bg-secondary hover:bg-secondary/90 glow-blue">
+              <Button size="lg" variant="outline" className="border-foreground/20 hover:bg-foreground/5">
                 <Icon name="MessageCircle" size={20} className="mr-2" />
                 Написать нам
               </Button>
@@ -336,7 +336,7 @@ const Index = () => {
           <div className="container px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Готовы начать свой проект?</h2>
             <p className="text-lg text-muted-foreground mb-8">Свяжитесь с нами и получите консультацию</p>
-            <Button size="lg" className="bg-primary hover:bg-primary/90 glow-purple animate-pulse-glow">
+            <Button size="lg" className="bg-primary hover:bg-primary/90">
               <Icon name="Rocket" size={20} className="mr-2" />
               Заказать проект
             </Button>
